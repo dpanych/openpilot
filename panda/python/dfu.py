@@ -92,8 +92,16 @@ class PandaDFU(object):
     self.reset()
 
   def recover(self):
-    from panda import BASEDIR
-    fn = os.path.join(BASEDIR, "board", "obj", "bootstub.panda.bin")
+    from panda import BASEDIR, build_st
+    if self.legacy:
+      fn = "obj/bootstub.comma.bin"
+      print("building legacy bootstub")
+      build_st(fn, "Makefile.legacy")
+    else:
+      fn = "obj/bootstub.panda.bin"
+      print("building panda bootstub")
+      build_st(fn)
+    fn = os.path.join(BASEDIR, "board", fn)
 
     with open(fn, "rb") as f:
       code = f.read()
